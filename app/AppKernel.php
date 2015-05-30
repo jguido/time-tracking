@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Sonata\BlockBundle\SonataBlockBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             //...
 
             // If you haven't already, add the storage bundle
@@ -39,6 +40,7 @@ class AppKernel extends Kernel
             new Application\Sonata\UserBundle\ApplicationSonataUserBundle(),
             new Sonata\ClassificationBundle\SonataClassificationBundle(),
             new Application\Sonata\ClassificationBundle\ApplicationSonataClassificationBundle(),
+            new Sonata\IntlBundle\SonataIntlBundle(),
 
             new AppBundle\AppBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
