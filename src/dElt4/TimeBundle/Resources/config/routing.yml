@@ -1,0 +1,3 @@
+d_elt4_time_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: dElt4TimeBundle:Default:index }

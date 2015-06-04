@@ -1,0 +1,14 @@
+services:
+    project.admin:
+        class: dElt4\TimeBundle\Admin\ProjectAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "general.project", label: "general.project", label_catalogue: "labels"}
+        arguments:
+            - ~
+            - dElt4\TimeBundle\Entity\Project
+            - ~
+        calls:
+            - [ setTranslationDomain, [labels]]
+#    d_elt4_time.example:
+#        class: dElt4\TimeBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

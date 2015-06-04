@@ -41,6 +41,8 @@
 
         <field name="credentialsExpireAt" column="credentials_expire_at" type="datetime" nullable="true" />
 
+        <many-to-many target-entity="dElt4\TimeBundle\Entity\Project" field="projects" mapped-by="users"/>
+
     </entity>
 
 </doctrine-mapping>

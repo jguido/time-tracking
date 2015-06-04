@@ -76,6 +76,7 @@ doctrine:
                     ApplicationSonataUserBundle: ~
                     SonataClassificationBundle: ~
                     ApplicationSonataClassificationBundle: ~
+                    dElt4TimeBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:

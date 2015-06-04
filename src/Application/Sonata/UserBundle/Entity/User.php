@@ -11,6 +11,7 @@
 
 namespace Application\Sonata\UserBundle\Entity;
 
+use dElt4\TimeBundle\Entity\Project;
 use Sonata\UserBundle\Entity\BaseUser as BaseUser;
 
 /**
@@ -29,6 +30,11 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * @var Project
+     */
+    protected $projects;
+
+    /**
      * Get id
      *
      * @return integer $id
@@ -36,5 +42,55 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setProjects(array $projects) {
+        if (count($projects) > 0) {
+            foreach ($projects as $element) {
+                $this->addProject($element);
+            }
+        }
+    }
+
+    public function addProject(Project $project) {
+        $this->projects->add($project);
+        if (count($this->projects) > 0) {
+                $found = false;
+                foreach ($this->projects as $tmp) {
+                    if ($tmp->getLabel() === $project->getLabel()) {
+                        $found = true;
+                    }
+                }
+                if (!$found) {
+                    $this->projects[] = $project;
+                }
+            }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project) {
+        $this->projects->removeElement($project);
+        $tmps = array();
+            if (count($this->projects) > 0) {
+                foreach ($this->projects as $tmp) {
+                    if ($tmp->getLabel() !== $project->getLabel()) {
+                        $tmps[] = $tmp;
+                    }
+                }
+                $this->projects = $tmps;
+            }
+
+        return $this;
+    }
+
+    public function clearProjects() {
+        $this->projects->clear();
+
+        return $this;
+    }
+
+    public function getProjects() {
+        return $this->projects;
     }
 }

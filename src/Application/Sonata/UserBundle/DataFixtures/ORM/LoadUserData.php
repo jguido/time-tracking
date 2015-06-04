@@ -6,7 +6,7 @@ use Application\Sonata\UserBundle\Entity\User;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadLocaleData implements FixtureInterface
+class LoadUserData implements FixtureInterface
 {
     /**
      * {@inheritDoc}
