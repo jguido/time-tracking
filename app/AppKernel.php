@@ -41,6 +41,7 @@ class AppKernel extends Kernel
             new Sonata\ClassificationBundle\SonataClassificationBundle(),
             new Application\Sonata\ClassificationBundle\ApplicationSonataClassificationBundle(),
             new Sonata\IntlBundle\SonataIntlBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
 
             new AppBundle\AppBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),

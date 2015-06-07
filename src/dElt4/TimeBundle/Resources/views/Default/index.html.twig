@@ -1,1 +1,128 @@
-Hello {{ name }}!
+{% extends 'SonataAdminBundle:CRUD:edit.html.twig' %}
+{% block title %}{{ 'my_calendar'|trans({}, 'messages') }}{% endblock%}
+{% block actions %}{% endblock %}
+{% block sonata_breadcrumb %}
+    {% if _breadcrumb is not empty or action is defined %}
+        <ol class="nav navbar-top-links breadcrumb">
+            <li><a href="{{ path('sonata_admin_dashboard') }}"><i class="fa fa-home"></i></a></li>
+            <li>{{ 'my_calendar'|trans({}, 'messages') }}</li>
+        </ol>
+    {% endif %}
+{% endblock sonata_breadcrumb %}
+{% block tab_menu %}{% endblock %}
+{% block form %}
+    <section class="content">
+        <div class="sonata-ba-form">
+            <form role="form" action="" method="">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12 ">
+                            <div class="box box-success">
+                                <div class="box-header">
+                                    <h4 class="box-title">
+                                        {{ 'time_tracking'|trans({}, 'messages') }}
+                                    </h4>
+                                </div>
+                                <div class="box-body">
+                                    <div id="calendar"></div>
+                                    {#{{ include('dElt4TimeBundle:Default:calendr.html.twig') }}#}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="well well-small form-actions">
+                    <button class="btn btn-success" type="button" name="btn_save"><i class="fa fa-save"></i> {{ 'btn_save'|trans({}, 'messages') }}</button>
+                    <button class="btn btn-success" type="button" name="btn_print"><i class="fa fa-print"></i> {{ 'btn_print'|trans({}, 'messages') }}</button>
+                    <button type="submit" class="btn btn-success" name="btn_create_and_list"><i class="fa fa-table"></i> {{ 'btn_export_csv'|trans({}, 'messages') }}</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <script type="text/javascript">
+    </script>
+{% endblock form %}
+{% block custom_js %}
+    <script>
+        var projects = null;
+        jQuery(document).ready(function($){
+            $.get(Routing.generate('path_projects'), function (res) {
+                projects = res;
+                $('#calendar').fullCalendar({
+                    header:
+                    {
+                        left:   'title',
+                        center: '',
+                        right:  'today prev next'
+                    },
+                    start: '9:00',
+                    end: '22:00',
+                    editable: true,
+                    eventClick: function(calEvent, jsEvent, view) {
+
+                        alert('Event: ' + calEvent.title);
+                        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                        alert('View: ' + view.name);
+
+                        // change the border color just for fun
+                        $(this).css('border-color', 'red');
+
+                    },
+                    dayClick: function(date, jsEvent, view) {
+
+                        alert('Clicked on: ' + date.format());
+
+                        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+
+                        alert('Current view: ' + view.name);
+
+                        // change the day's background color just for fun
+                        $(this).css('background-color', 'red');
+
+                    },
+                    events: [
+                        {
+                            title: 'Event1',
+                            start: '2015-06-04'
+                        },
+                        {
+                            title: 'Event2',
+                            start: '2015-06-05'
+                        }
+                        // etc...
+                    ],
+                    color: 'yellow',   // an option!
+                    textColor: 'black' // an option!
+                });
+                $('.fc-button-group, .fc button').show();
+                $('.fc-content-skeleton').find('table>tbody td').each(function(){
+                    var div1 = $('<div class="col-xs-12"></div>');
+                    div1.append(buildSelect(projects));
+                    var div2 = $('<div class="col-xs-12"></div>');
+                    div2.append(buildSelect(projects));
+                    $(this).append(div1);
+                    $(this).append(div2);
+                });
+            });
+
+        });
+        function buildSelect(values, id) {
+            var $select = $('<select class="select2"></select>');
+            $select.append('<option value=""></option>');
+            for(var i in values) {
+                var value = values[i];
+                if (value.id && value.title) {
+                    if (value.id === id) {
+                        var sel = 'SELECTED="SELECTED"';
+                    } else {
+                        var sel = '';
+                    }
+                    $select.append('<option value="'+ value.id +'" '+ sel +'>'+ value.title +'</option>')
+                }
+            }
+//            $select.select2();
+
+            return $select;
+        }
+    </script>
+{% endblock custom_js %}

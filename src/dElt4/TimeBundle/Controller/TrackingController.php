@@ -8,10 +8,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class TrackingController extends Controller
 {
     /**
-     * @Route("/app/example", name="homepage")
+     * @Route("/admin/app/calendar", name="path_calendar")
      */
-    public function indexAction($name)
+    public function indexAction()
     {
-        return $this->render('dElt4TimeBundle:Default:index.html.twig', array('name' => $name));
+        return $this->render('dElt4TimeBundle:Default:index.html.twig', array(
+            'admin' => null,
+            'action' => null,
+            'base_template' => '::standard_layout.html.twig',
+            'admin_pool' => $this->get('sonata.admin.pool')
+        ));
     }
 }

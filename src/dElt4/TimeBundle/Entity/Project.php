@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Project
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="dElt4\TimeBundle\Entity\ProjectRepository")
  */
 class Project
 {

@@ -32,6 +32,8 @@ file that was distributed with this source code.
             {% for stylesheet in admin_pool.getOption('stylesheets', []) %}
                 <link rel="stylesheet" href="{{ asset(stylesheet) }}">
             {% endfor %}
+            <link rel="stylesheet" href="{{ asset('bundles/delt4time/css/fullcalendar.min.css') }}" />
+            <link rel="stylesheet" href="{{ asset('bundles/delt4time/css/fullcalendar.print.css') }}" />
 
         {% endblock %}
 
@@ -50,6 +52,7 @@ file that was distributed with this source code.
             {% for javascript in admin_pool.getOption('javascripts', []) %}
                 <script src="{{ asset(javascript) }}"></script>
             {% endfor %}
+
 
             {# localize select2 #}
             {% if admin_pool is defined and admin_pool.getOption('use_select2') %}
@@ -237,6 +240,9 @@ file that was distributed with this source code.
                                                     </li>
                                                 {% endif %}
                                             {% endfor %}
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('path_calendar') }}"><i class="fa fa-calendar"></i>&nbsp;{{ 'calendar'|trans({}, 'messages') }}</a></li>
+                                            {% endif %}
                                         </ul>
                                     {% endif %}
                                 {% endblock side_bar_nav %}
@@ -331,4 +337,9 @@ file that was distributed with this source code.
             </div>
         {% endblock sonata_wrapper %}
     </body>
+
+    <script src="{{ asset('bundles/delt4time/js/fullcalendar.min.js') }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    {% block custom_js %}{% endblock custom_js %}
 </html>
