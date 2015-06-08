@@ -2,6 +2,7 @@
 
 namespace dElt4\TimeBundle\Entity;
 
+use Application\Sonata\UserBundle\Document\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,28 +32,28 @@ class Event
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="begin", type="datetime")
+     * @ORM\Column(name="day", type="datetime")
      */
-    private $begin;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="end", type="datetime")
-     */
-    private $end;
+    private $day;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="project", type="string", length=255)
+     * @ORM\Column(name="type", type="string")
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\ManyToOne(targetEntity="dElt4\TimeBundle\Entity\Project", inversedBy="events")
      */
     private $project;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="user", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Application\Sonata\UserBundle\Entity\User")
      */
     private $user;
 
@@ -100,35 +101,35 @@ class Event
     /**
      * Set begin
      *
-     * @param \DateTime $begin
+     * @param \DateTime $day
      * @return Event
      */
-    public function setBegin($begin)
+    public function setDay($day)
     {
-        $this->begin = $begin;
+        $this->day = $day;
 
         return $this;
     }
 
     /**
-     * Get begin
+     * Get day
      *
      * @return \DateTime 
      */
-    public function getBegin()
+    public function getDay()
     {
-        return $this->begin;
+        return $this->day;
     }
 
     /**
-     * Set end
+     * Set type
      *
-     * @param \DateTime $end
+     * @param string $end
      * @return Event
      */
-    public function setEnd($end)
+    public function setType($type)
     {
-        $this->end = $end;
+        $this->type = $type;
 
         return $this;
     }
@@ -136,20 +137,20 @@ class Event
     /**
      * Get end
      *
-     * @return \DateTime 
+     * @return string
      */
-    public function getEnd()
+    public function getType()
     {
-        return $this->end;
+        return $this->type;
     }
 
     /**
      * Set project
      *
-     * @param string $project
+     * @param Project $project
      * @return Event
      */
-    public function setProject($project)
+    public function setProject(Project $project)
     {
         $this->project = $project;
 
@@ -159,7 +160,7 @@ class Event
     /**
      * Get project
      *
-     * @return string 
+     * @return Project
      */
     public function getProject()
     {
@@ -169,10 +170,10 @@ class Event
     /**
      * Set user
      *
-     * @param string $user
+     * @param User $user
      * @return Event
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -182,7 +183,7 @@ class Event
     /**
      * Get user
      *
-     * @return string 
+     * @return User
      */
     public function getUser()
     {
@@ -210,5 +211,10 @@ class Event
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function __toString()
+    {
+        return $this->getDay().' - '.$this->getType().' - ' . $this->getProject()->getTitle();
     }
 }

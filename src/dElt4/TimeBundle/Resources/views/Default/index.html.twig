@@ -1,4 +1,10 @@
 {% extends 'SonataAdminBundle:CRUD:edit.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .collapsed-cell {visibility: collapse;}
+    </style>
+{% endblock stylesheets %}
 {% block title %}{{ 'my_calendar'|trans({}, 'messages') }}{% endblock%}
 {% block actions %}{% endblock %}
 {% block sonata_breadcrumb %}
@@ -19,8 +25,11 @@
                         <div class="col-md-12 ">
                             <div class="box box-success">
                                 <div class="box-header">
-                                    <h4 class="box-title">
-                                        {{ 'time_tracking'|trans({}, 'messages') }}
+                                    <h4 class="box-title col-xs-12">
+                                        <div class="row col-xs-12">
+                                            <div class="col-xs-4 pull-left">{{ 'time_tracking'|trans({}, 'messages') }}</div>
+                                            <div class="col-xs-8 alert-danger pull-right">{{ 'alert_save_before_switch'|trans({}, 'messages') }}</div>
+                                        </div>
                                     </h4>
                                 </div>
                                 <div class="box-body">
@@ -58,56 +67,49 @@
                     start: '9:00',
                     end: '22:00',
                     editable: true,
-                    eventClick: function(calEvent, jsEvent, view) {
-
-                        alert('Event: ' + calEvent.title);
-                        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-                        alert('View: ' + view.name);
-
-                        // change the border color just for fun
-                        $(this).css('border-color', 'red');
-
-                    },
-                    dayClick: function(date, jsEvent, view) {
-
-                        alert('Clicked on: ' + date.format());
-
-                        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-                        alert('Current view: ' + view.name);
-
-                        // change the day's background color just for fun
-                        $(this).css('background-color', 'red');
-
-                    },
-                    events: [
-                        {
-                            title: 'Event1',
-                            start: '2015-06-04'
-                        },
-                        {
-                            title: 'Event2',
-                            start: '2015-06-05'
-                        }
-                        // etc...
-                    ],
-                    color: 'yellow',   // an option!
-                    textColor: 'black' // an option!
+                    color: 'yellow',
+                    textColor: 'black'
                 });
                 $('.fc-button-group, .fc button').show();
-                $('.fc-content-skeleton').find('table>tbody td').each(function(){
-                    var div1 = $('<div class="col-xs-12"></div>');
-                    div1.append(buildSelect(projects));
-                    var div2 = $('<div class="col-xs-12"></div>');
-                    div2.append(buildSelect(projects));
-                    $(this).append(div1);
-                    $(this).append(div2);
-                });
+                initContent();
+                var $cell = getCell('2015-06-15');
+//                console.log($cell);
+//                console.log(getDataDate($cell));
+//                console.log(getCell('2015-06-15').parent().parent());
             });
 
         });
+        function initContent() {
+            $('.fc-content-skeleton').find('table>tbody td').each(function(){
+                var div1 = $('<div class="col-xs-12"><p>AM</p></div>');
+                div1.append(buildSelect(projects));
+                var div2 = $('<div class="col-xs-12"><p>PM</p></div>');
+                div2.append(buildSelect(projects));
+                var $headCell = getHeadCell($(this).attr('cell-data-date'));
+                if ($headCell !== undefined && !$headCell.hasClass('collapsed-cell')) {
+//                    console.log($headCell.hasClass('collapsed-cell'));
+                    $(this).append(div1);
+                    $(this).append(div2);
+                    $(this).attr('cell-data-date', getDataDate($(this)));
+                    $(this).addClass('fc-day');
+                }
+            });
+            $(".fc-other-month").each(function(){
+                $(this).addClass('collapsed-cell');
+                getCell($(this).attr('data-date')).addClass('collapsed-cell');
+            });
+            $('select.select-calendar').select2();
+            $('button.fc-prev-button').unbind('click').click(function(){
+                $('#calendar').fullCalendar('prev');
+                initContent();
+            });
+            $('button.fc-next-button').unbind('click').click(function(){
+                $('#calendar').fullCalendar('next');
+                initContent();
+            });
+        }
         function buildSelect(values, id) {
-            var $select = $('<select class="select2"></select>');
+            var $select = $('<select class="select-calendar" style="width:90%;margin-bottom: 5px;"></select>');
             $select.append('<option value=""></option>');
             for(var i in values) {
                 var value = values[i];
@@ -120,9 +122,20 @@
                     $select.append('<option value="'+ value.id +'" '+ sel +'>'+ value.title +'</option>')
                 }
             }
-//            $select.select2();
 
             return $select;
+        }
+        function getDataDate($el) {
+            var index = $el.index();
+
+            return $el.parent().parent().parent().find('>thead>tr>td:eq('+index+')').attr('data-date');
+        }
+        function getHeadCell(date) {
+            return $('.fc-day[data-date="'+date+'"]');
+        }
+        function getCell(date) {
+
+            return $('.fc-day[cell-data-date="'+date+'"]');
         }
     </script>
 {% endblock custom_js %}

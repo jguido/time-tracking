@@ -6,6 +6,10 @@
                 <source>calendar</source>
                 <target></target>
             </trans-unit>
+            <trans-unit id="2">
+                <source>alert_save_before_switch</source>
+                <target>Save before switching or you will lost your changes!</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
