@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event
 {
+    const AM = 'am';
+    const PM = 'pm';
     /**
      * @var integer
      *
@@ -21,13 +23,6 @@ class Event
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="uid", type="string", length=255)
-     */
-    private $uid;
 
     /**
      * @var \DateTime
@@ -57,13 +52,6 @@ class Event
      */
     private $user;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=255)
-     */
-    private $description;
-
 
     /**
      * Get id
@@ -73,29 +61,6 @@ class Event
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set uid
-     *
-     * @param string $uid
-     * @return Event
-     */
-    public function setUid($uid)
-    {
-        $this->uid = $uid;
-
-        return $this;
-    }
-
-    /**
-     * Get uid
-     *
-     * @return string 
-     */
-    public function getUid()
-    {
-        return $this->uid;
     }
 
     /**
@@ -188,29 +153,6 @@ class Event
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return Event
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string 
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 
     public function __toString()
