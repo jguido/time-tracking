@@ -3,6 +3,7 @@
     {{ parent() }}
     <style>
         .collapsed-cell {visibility: collapse;}
+        .weekend-cell {background-color: #f2dede !important;}
     </style>
 {% endblock stylesheets %}
 {% block title %}{{ 'my_calendar'|trans({}, 'messages') }}{% endblock%}
@@ -48,6 +49,7 @@
             </form>
         </div>
     </section>
+    {{ include('dElt4TimeBundle:Default:spinner_box.html.twig') }}
     <script type="text/javascript">
     </script>
 {% endblock form %}
@@ -56,7 +58,22 @@
         var projects = null;
         jQuery(document).ready(function($){
             $('button[name="btn_save"]').unbind('click').click(function(){
-                buildPostData();
+                showSpinner();
+                var postData = buildPostData();
+                $.ajax({
+                    url: Routing.generate('path_persist_tracking'),
+                    type: 'POST',
+                    dataType : 'json',
+                    data: postData,
+                    success : function(code_html, statut){
+                        hideSpinner();
+                    },
+
+                    error : function(resultat, statut, error){
+                        alert(error);
+                        hideSpinner();
+                    }
+                });
             });
             $.get(Routing.generate('path_projects'), function (res) {
                 //@todo get data calendar for current user and current month with spinner
@@ -85,13 +102,16 @@
         });
         function initContent() {
             $('.fc-content-skeleton').find('table>tbody td').each(function(){
+                console.log($(this).index())
+                if ($(this).index() === 0 || $(this).index() ===  6) {
+                    $(this).addClass('weekend-cell');
+                }
                 var div1 = $('<div class="col-xs-12"><p>AM</p></div>');
                 div1.append(buildSelect(projects, 'am'));
                 var div2 = $('<div class="col-xs-12"><p>PM</p></div>');
                 div2.append(buildSelect(projects, 'pm'));
                 var $headCell = getHeadCell($(this).attr('cell-data-date'));
                 if ($headCell !== undefined && !$headCell.hasClass('collapsed-cell')) {
-//                    console.log($headCell.hasClass('collapsed-cell'));
                     $(this).append(div1);
                     $(this).append(div2);
                     $(this).attr('cell-data-date', getDataDate($(this)));
@@ -156,8 +176,14 @@
                 if (!$(this).hasClass('collapsed-cell')) {
                     var row = {
                         'date': $(this).attr('cell-data-date'),
-                        'am': $(this).find('select[data-type="am"]').val(),
-                        'pm': $(this).find('select[data-type="pm"]').val()
+                        'am': {
+                            id     : $(this).find('select[data-type="am"]').attr('data-id'),
+                            project: $(this).find('select[data-type="am"]').val()
+                        },
+                        'pm': {
+                            id     : $(this).find('select[data-type="pm"]').attr('data-id'),
+                            project: $(this).find('select[data-type="pm"]').val()
+                        }
                     };
                     postData.days.push(row);
                 }
@@ -166,6 +192,14 @@
             console.log(postData);
 
             return postData;
+        }
+        function showSpinner(delay, message) {
+            $('.spinner-layout > .spinner-message').html(message);
+            $('.spinner-back').fadeIn(delay ? delay : 150);
+        }
+        function hideSpinner(delay) {
+            $('.spinner-layout > .spinner-message').html('');
+            $('.spinner-back').fadeOut(delay ? delay : 150);
         }
     </script>
 {% endblock custom_js %}

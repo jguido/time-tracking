@@ -5,6 +5,7 @@ namespace dElt4\TimeBundle\Entity;
 use CalendR\Event\Provider\ProviderInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Types\Type;
+use Sonata\UserBundle\Model\User;
 
 /**
  * EventRepository
@@ -35,5 +36,34 @@ class EventRepository extends EntityRepository
             ->orderBy('e.begin')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param array  $data
+     * @param User   $user
+     * @param string $type
+     * @return Event
+     */
+    public function findOrCreate(array $data, User $user, $type)
+    {
+        if (isset($data['id']) && '' !== $data['id']) {
+            $event = $this->find($data['id']);
+        } else {
+            $event = new Event();
+            $event
+                ->setDay(\DateTime::createFromFormat('Y-m-d', $data['date']))
+                ->setType($type);
+        }
+        $event
+            ->setProject($data['project'])
+            ->setUser($user);
+
+        if (!isset($data['id']) || '' !== $data['id']) {
+            $this->_em->persist($event);
+        }
+
+        $this->_em->flush($event);
+
+        return $event;
     }
 }
