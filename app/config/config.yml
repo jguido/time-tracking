@@ -79,8 +79,9 @@ doctrine:
                     dElt4TimeBundle: ~
                 dql:
                     datetime_functions:
+                        day:   dElt4\TimeBundle\Dql\Day
                         month: dElt4\TimeBundle\Dql\Month
-                        year: dElt4\TimeBundle\Dql\Year
+                        year:  dElt4\TimeBundle\Dql\Year
 
 # Swiftmailer Configuration
 swiftmailer:

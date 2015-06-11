@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class TrackingController extends Controller
 {
@@ -36,15 +37,18 @@ class TrackingController extends Controller
             $days = $request->request->has('days') ? $request->get('days') : null;
             if (is_array($days) && count($days) > 0) {
                 foreach ($days as $day) {
-                    if (isset($day['am'])) {
+                    if (isset($day['am']) && '' !== $day['am']) {
                         $result[] = $_em->getRepository('dElt4TimeBundle:Event')->findOrCreate($day['am'], $this->getUser(), 'am');
                     }
-                    if (isset($day['pm'])) {
+                    if (isset($day['pm']) && '' !== $day['pm']) {
                         $result[] = $_em->getRepository('dElt4TimeBundle:Event')->findOrCreate($day['pm'], $this->getUser(), 'pm');
                     }
                 }
 
-                return new JsonResponse($result, 201);
+                $response = new Response($this->get('serializer')->serialize($result, 'json'), 201);
+                $response->headers->add(array('Content-Type', 'application/json'));
+
+                return $response;
             }
         } else {
             return new JsonResponse(null, 401, array('private ' => true));

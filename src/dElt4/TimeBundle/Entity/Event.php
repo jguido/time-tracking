@@ -4,6 +4,7 @@ namespace dElt4\TimeBundle\Entity;
 
 use FOS\UserBundle\Model\User;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Event
@@ -21,6 +22,7 @@ class Event
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Type("string")
      */
     private $id;
 
@@ -28,6 +30,7 @@ class Event
      * @var \DateTime
      *
      * @ORM\Column(name="day", type="datetime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      */
     private $day;
 
@@ -35,13 +38,23 @@ class Event
      * @var string
      *
      * @ORM\Column(name="type", type="string")
+     * @JMS\Type("string")
      */
     private $type;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     * @JMS\Type("boolean")
+     */
+    private $locked;
 
     /**
      * @var string
      *
      * @ORM\ManyToOne(targetEntity="dElt4\TimeBundle\Entity\Project", inversedBy="events")
+     * @JMS\Type("dElt4\TimeBundle\Entity\Project")
      */
     private $project;
 
@@ -49,8 +62,14 @@ class Event
      * @var string
      *
      * @ORM\ManyToOne(targetEntity="Application\Sonata\UserBundle\Entity\User")
+     * @JMS\Type("Application\Sonata\UserBundle\Entity\User")
      */
     private $user;
+
+    public function __construct()
+    {
+        $this->locked = false;
+    }
 
 
     /**
@@ -107,6 +126,25 @@ class Event
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param $locked
+     * @return $this
+     */
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getLocked()
+    {
+        return $this->locked;
     }
 
     /**

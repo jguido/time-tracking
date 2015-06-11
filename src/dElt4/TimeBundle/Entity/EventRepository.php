@@ -26,7 +26,6 @@ class EventRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('e');
 
-
         return $qb
             ->where('YEAR(e.day) = :year')
             ->andWhere('MONTH(e.day) = :month')
@@ -40,6 +39,25 @@ class EventRepository extends EntityRepository
             ->getResult();
     }
 
+    public function findOneByUserDateAndType($userId, $type, \DateTime $date)
+    {
+        $qb = $this->createQueryBuilder('e');
+
+        return $qb
+            ->where('YEAR(e.day) = :year')
+            ->andWhere('MONTH(e.day) = :month')
+            ->andWhere('DAY(e.day) = :day')
+            ->andWhere('e.user = :user')
+            ->andWhere('e.type = :type')
+            ->setParameter('year', $date->format('Y'))
+            ->setParameter('month', $date->format('m'))
+            ->setParameter('day', $date->format('d'))
+            ->setParameter('user', $userId)
+            ->setParameter('type', $type, Type::STRING)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * @param array  $data
      * @param User   $user
@@ -51,19 +69,31 @@ class EventRepository extends EntityRepository
         if (isset($data['id']) && '' !== $data['id']) {
             $event = $this->find($data['id']);
         } else {
-            $event = new Event();
-            $event
-                ->setDay(\DateTime::createFromFormat('Y-m-d', $data['date']))
-                ->setType($type);
-            $this->_em->persist($event);
+            $testEvent = $this->findOneByUserDateAndType(
+                $user->getId(),
+                $type,
+                \DateTime::createFromFormat('Y-m-d', $data['date'])
+            );
+
+            if ($testEvent) {
+                $event = $testEvent;
+            } else {
+                $event = new Event();
+                $event
+                    ->setDay(\DateTime::createFromFormat('Y-m-d', $data['date']))
+                    ->setType($type);
+                $this->_em->persist($event);
+            }
         }
-        $project = $this->_em->getRepository('dElt4TimeBundle:Project')->find($data['project']);
+        if (!$event->getLocked()) {
+            $project = $this->_em->getRepository('dElt4TimeBundle:Project')->find($data['project']);
 
-        $event
-            ->setProject($project)
-            ->setUser($user);
+            $event
+                ->setProject($project)
+                ->setUser($user);
 
-        $this->_em->flush($event);
+            $this->_em->flush($event);
+        }
 
         return $event;
     }
