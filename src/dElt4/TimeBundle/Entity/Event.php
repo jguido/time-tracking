@@ -2,7 +2,7 @@
 
 namespace dElt4\TimeBundle\Entity;
 
-use Application\Sonata\UserBundle\Document\User;
+use FOS\UserBundle\Model\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -115,7 +115,7 @@ class Event
      * @param Project $project
      * @return Event
      */
-    public function setProject(Project $project)
+    public function setProject($project)
     {
         $this->project = $project;
 

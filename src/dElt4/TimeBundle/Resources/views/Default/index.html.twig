@@ -102,7 +102,6 @@
         });
         function initContent() {
             $('.fc-content-skeleton').find('table>tbody td').each(function(){
-                console.log($(this).index())
                 if ($(this).index() === 0 || $(this).index() ===  6) {
                     $(this).addClass('weekend-cell');
                 }
@@ -124,6 +123,7 @@
                 getCell($(this).attr('data-date')).addClass('collapsed-cell');
             });
             $('select.select-calendar').select2();
+            setCalendarValues();
             $('button.fc-prev-button').unbind('click').click(function(){
                 $('#calendar').fullCalendar('prev');
                 initContent();
@@ -163,7 +163,11 @@
             return $('.fc-day[cell-data-date="'+date+'"]');
         }
         function setCalendarValues() {
-
+            showSpinner();
+            var date = $("#calendar").fullCalendar('getDate');
+            $.get(Routing.generate('path_events', {'date': date.format('YYYY-MM')}), function(events){
+                hideSpinner();
+            });
         }
 
         function buildPostData() {
@@ -178,11 +182,13 @@
                         'date': $(this).attr('cell-data-date'),
                         'am': {
                             id     : $(this).find('select[data-type="am"]').attr('data-id'),
-                            project: $(this).find('select[data-type="am"]').val()
+                            project: $(this).find('select[data-type="am"]').val(),
+                            date   : $(this).attr('cell-data-date')
                         },
                         'pm': {
                             id     : $(this).find('select[data-type="pm"]').attr('data-id'),
-                            project: $(this).find('select[data-type="pm"]').val()
+                            project: $(this).find('select[data-type="pm"]').val(),
+                            date   : $(this).attr('cell-data-date')
                         }
                     };
                     postData.days.push(row);

@@ -77,6 +77,10 @@ doctrine:
                     SonataClassificationBundle: ~
                     ApplicationSonataClassificationBundle: ~
                     dElt4TimeBundle: ~
+                dql:
+                    datetime_functions:
+                        month: dElt4\TimeBundle\Dql\Month
+                        year: dElt4\TimeBundle\Dql\Year
 
 # Swiftmailer Configuration
 swiftmailer:

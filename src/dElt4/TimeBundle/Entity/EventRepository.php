@@ -2,7 +2,6 @@
 
 namespace dElt4\TimeBundle\Entity;
 
-use CalendR\Event\Provider\ProviderInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Types\Type;
 use Sonata\UserBundle\Model\User;
@@ -19,21 +18,24 @@ class EventRepository extends EntityRepository
      * Return events that matches to $begin && $end
      * $end date should be exclude
      *
-     * @param \DateTime $begin
-     * @param \DateTime $end
-     * @param array $options
+     * @param \DateTime $day
+     * @param User      $user
      */
-    public function getEvents(\DateTime $begin, \DateTime $end, array $options = array())
+    public function getEvents(\DateTime $day, User $user)
     {
+
         $qb = $this->createQueryBuilder('e');
 
 
         return $qb
-            ->where('e.begin >= :start')
-            ->andWhere('e.end <= :end')
-            ->setParameter('start', $begin, Type::DATETIME)
-            ->setParameter('end', $end, Type::DATETIME)
-            ->orderBy('e.begin')
+            ->where('YEAR(e.day) = :year')
+            ->andWhere('MONTH(e.day) = :month')
+            ->andWhere(
+                $qb->expr()->eq('e.user', $user->getId())
+            )
+            ->setParameter('year', $day->format('Y'))
+            ->setParameter('month', $day->format('m'))
+            ->orderBy('e.day')
             ->getQuery()
             ->getResult();
     }
@@ -53,14 +55,13 @@ class EventRepository extends EntityRepository
             $event
                 ->setDay(\DateTime::createFromFormat('Y-m-d', $data['date']))
                 ->setType($type);
-        }
-        $event
-            ->setProject($data['project'])
-            ->setUser($user);
-
-        if (!isset($data['id']) || '' !== $data['id']) {
             $this->_em->persist($event);
         }
+        $project = $this->_em->getRepository('dElt4TimeBundle:Project')->find($data['project']);
+
+        $event
+            ->setProject($project)
+            ->setUser($user);
 
         $this->_em->flush($event);
 
