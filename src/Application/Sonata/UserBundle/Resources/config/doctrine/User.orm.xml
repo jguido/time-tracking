@@ -25,6 +25,8 @@
 
         <field name="lastLogin" column="last_login" type="datetime" nullable="true" />
 
+        <field name="tjm" column="tjm" type="float" nullable="true" />
+
         <field name="locked" column="locked" type="boolean" />
 
         <field name="expired" column="expired" type="boolean" />
@@ -41,7 +43,7 @@
 
         <field name="credentialsExpireAt" column="credentials_expire_at" type="datetime" nullable="true" />
 
-        <many-to-many target-entity="dElt4\TimeBundle\Entity\Project" field="projects" mapped-by="users"/>
+        <one-to-many target-entity="dElt4\TimeBundle\Entity\ProjectHasUser" field="projectHasUsers" mapped-by="user"/>
 
     </entity>
 

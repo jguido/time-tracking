@@ -243,9 +243,9 @@ file that was distributed with this source code.
                                             {% if is_granted('ROLE_ADMIN') %}
                                                 <li><a href="{{ path('path_calendar') }}"><i class="fa fa-calendar"></i>&nbsp;{{ 'calendar'|trans({}, 'messages') }}</a></li>
                                             {% endif %}
-                                            {#{% if is_granted('ROLE_ADMIN') %}#}
-                                                {#<li><a href="{{ path() }}"><i class="fa fa-bar-chart-o"></i>&nbsp;{{ 'reporting'|trans({}, 'messages') }}</a></li>#}
-                                            {#{% endif %}#}
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href=""><i class="fa fa-bar-chart-o"></i>&nbsp;{{ 'reporting'|trans({}, 'messages') }}</a></li>
+                                            {% endif %}
                                             {% if is_granted('ROLE_ADMIN') %}
                                                 <li><a href="{{ path('admin_delt4_synthesis_configuration_edit', {'id': 1}) }}"><i class="fa fa-gear"></i>&nbsp;{{ 'configuration'|trans({}, 'messages') }}</a></li>
                                             {% endif %}

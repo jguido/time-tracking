@@ -48,9 +48,9 @@ class Project
     /**
      * @var string
      *
-     * @ORM\ManyToMany(targetEntity="Application\Sonata\UserBundle\Entity\User", inversedBy="projects")
+     * @ORM\OneToMany(targetEntity="dElt4\TimeBundle\Entity\ProjectHasUser", mappedBy="project", cascade={"PERSIST", "REMOVE"})
      */
-    private $users;
+    private $projectHasUsers;
 
     /**
      * @var float
@@ -62,7 +62,7 @@ class Project
     public function __construct()
     {
         $this->documents = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->projectHasUsers = new ArrayCollection();
     }
 
 
@@ -169,29 +169,29 @@ class Project
      * @param ArrayCollection $users
      * @return Project
      */
-    public function setUsers($users)
+    public function setProjectHasUsers($projectHasUsers)
     {
-        if (count($users) > 0) {
-            foreach($users as $user) {
-                $this->addUser($user);
+        if (count($projectHasUsers) > 0) {
+            foreach($projectHasUsers as $projectHasUser) {
+                $this->addProjectHasUser($projectHasUser);
             }
         }
 
         return $this;
     }
 
-    public function addUser(User $user)
+    public function addProjectHasUser(ProjectHasUser $projectHasUser)
     {
-        $user->addProject($this);
-        $this->users->add($user);
+        $projectHasUser->setProject($this);
+        $this->projectHasUsers->add($projectHasUser);
 
         return $this;
     }
 
-    public function removeUser(User $user)
+    public function removeUser(ProjectHasUser $projectHasUser)
     {
-        $user->removeProject($this);
-        $this->users->removeElement($user);
+        $projectHasUser->setProject(null);
+        $this->projectHasUsers->removeElement($projectHasUser);
 
         return $this;
     }
@@ -201,9 +201,9 @@ class Project
      *
      * @return ArrayCollection
      */
-    public function getUsers()
+    public function getProjectHasUsers()
     {
-        return $this->users;
+        return $this->projectHasUsers;
     }
 
     /**

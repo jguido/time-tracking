@@ -9,6 +9,8 @@
 namespace dElt4\TimeBundle\Admin;
 
 
+use dElt4\TimeBundle\Entity\Project;
+use dElt4\TimeBundle\Entity\ProjectHasUser;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -24,15 +26,21 @@ class ProjectAdmin extends Admin {
             ->add('description', 'text', array('label' => 'Description'))
             ->add('price', 'money', array('label' => 'Description', 'precision' => 2))
             ->add('documents', 'sonata_type_model', array(
+                'required' => false,
                 'label'    => 'Documents',
                 'class'    => 'ApplicationSonataMediaBundle:Media',
                 'multiple' => true
             ))
-            ->add('users', 'sonata_type_model', array(
-                'label'    => 'Users',
-                'class'    => 'ApplicationSonataUserBundle:User',
-                'multiple' => true
-            ))
+            ->add('projectHasUsers', 'sonata_type_collection', array(
+                    'cascade_validation' => true
+                ), array(
+                    'edit'              => 'inline',
+                    'inline'            => 'table',
+                    'sortable'          => 'position',
+                    'link_parameters'   => array('context' => 'default'),
+                    'admin_code'        => 'project_has_user.admin'
+                )
+            )
         ;
     }
 
@@ -52,5 +60,28 @@ class ProjectAdmin extends Admin {
             ->addIdentifier('title')
             ->add('price')
         ;
+    }
+
+    public function postPersist($object)
+    {
+        $this->linkObject($object);
+    }
+
+    public function postUpdate($object)
+    {
+
+        $this->linkObject($object);
+    }
+
+    protected function linkObject(Project $object)
+    {
+        $_em = $this->getConfigurationPool()->getContainer()->get('doctrine.orm.default_entity_manager');
+        foreach ($object->getProjectHasUsers() as $projectHasUser) {
+            if ($projectHasUser instanceof ProjectHasUser) {
+                $projectHasUser->setProject($object);
+                $_em->persist($projectHasUser);
+            }
+        }
+        $_em->flush();
     }
 } 

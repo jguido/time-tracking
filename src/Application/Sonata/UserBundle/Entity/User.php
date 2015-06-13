@@ -12,6 +12,8 @@
 namespace Application\Sonata\UserBundle\Entity;
 
 use dElt4\TimeBundle\Entity\Project;
+use dElt4\TimeBundle\Entity\ProjectHasUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sonata\UserBundle\Entity\BaseUser as BaseUser;
 
 /**
@@ -30,9 +32,20 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @var Project
+     * @var ProjectHasUsers
      */
-    protected $projects;
+    protected $projectHasUsers;
+
+    /**
+     * @var double
+     */
+    protected $tjm;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->projectHasUsers = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -44,51 +57,33 @@ class User extends BaseUser
         return $this->id;
     }
 
-    public function setProjects(array $projects) {
-        if (count($projects) > 0) {
-            foreach ($projects as $element) {
-                $this->addProject($element);
+    public function setProjectHasUsers(array $projectHasUsers) {
+        if (count($projectHasUsers) > 0) {
+            foreach ($projectHasUsers as $element) {
+                $this->addProjectHasUser($element);
             }
         }
     }
 
-    public function addProject(Project $project) {
-        if (count($this->projects) > 0) {
-            $found = false;
-            foreach ($this->projects as $tmp) {
-                if ($tmp->getTitle() === $project->getTitle()) {
-                    $found = true;
-                }
-            }
-            if (!$found) {
-                $this->projects[] = $project;
-            }
-        }
+    public function addProjectHasUser(ProjectHasUser $projectHasUser) {
+        $this->projectHasUsers->add($projectHasUser);
 
         return $this;
     }
 
-    public function removeProject(Project $project) {
-        $tmps = array();
-        if (count($this->projects) > 0) {
-            foreach ($this->projects as $tmp) {
-                if ($tmp->getTitle() !== $project->getTitle()) {
-                    $tmps[] = $tmp;
-                }
-            }
-            $this->projects = $tmps;
-        }
+    public function removeProjectHasUser(ProjectHasUser $projectHasUser) {
+        $this->projectHasUsers->removeElement($projectHasUser);
 
         return $this;
     }
 
-    public function clearProjects() {
-        $this->projects->clear();
+    public function clearProjectHasUsers() {
+        $this->projectHasUsers->clear();
 
         return $this;
     }
 
-    public function getProjects() {
-        return $this->projects;
+    public function getProjectHasUsers() {
+        return $this->projectHasUsers;
     }
 }
