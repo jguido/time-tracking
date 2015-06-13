@@ -25,6 +25,7 @@ security:
                 use_forward:    false
                 check_path:     /admin/login_check
                 failure_path:   null
+                success_handler: configuration_check
             logout:
                 path:           /admin/logout
             anonymous:          true

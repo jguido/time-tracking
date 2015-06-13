@@ -1,4 +1,18 @@
 services:
+    configuration_check:
+        class: dElt4\SynthesisBundle\Manager\ConfigurationCheckManager
+        arguments: [ @doctrine.orm.default_entity_manager, @router ]
+
+    configuration.admin:
+        class: dElt4\SynthesisBundle\Admin\configurationAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "general.configuration", label: "general.configuration", label_catalogue: "labels"}
+        arguments:
+            - ~
+            - dElt4\SynthesisBundle\Entity\Configuration
+            - ~
+        calls:
+            - [ setTranslationDomain, [labels]]
 #    d_elt4_synthesis.example:
 #        class: dElt4\SynthesisBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

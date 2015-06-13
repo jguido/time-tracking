@@ -32,56 +32,56 @@ class Configuration
     /**
      * @var string
      *
-     * @ORM\Column(name="denomination", type="string", length=255)
+     * @ORM\Column(name="denomination", type="string", length=255, nullable=true)
      */
     private $denomination;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="address", type="string", length=255)
+     * @ORM\Column(name="address", type="string", length=255, nullable=true)
      */
     private $address;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="cp", type="string", length=5)
+     * @ORM\Column(name="cp", type="string", length=5, nullable=true)
      */
     private $cp;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="city", type="string", length=255)
+     * @ORM\Column(name="city", type="string", length=255, nullable=true)
      */
     private $city;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="country", type="string", length=50)
+     * @ORM\Column(name="country", type="string", length=50, nullable=true)
      */
     private $country;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string", length=50)
+     * @ORM\Column(name="phone", type="string", length=50, nullable=true)
      */
     private $phone;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
     private $email;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="webSite", type="string", length=255)
+     * @ORM\Column(name="webSite", type="string", length=255, nullable=true)
      */
     private $webSite;
 
