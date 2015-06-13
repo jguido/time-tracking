@@ -62,6 +62,8 @@ php app/console cache:clear --env=$ENV
 php app/console assets:install --symlink
 php app/console assetic:dump
 
-php app/console server:run 127.0.0.1:8050
+php app/console doctrine:database:create && php app/console doctrine:schema:create && php app/console doctrine:fixtures:load -n
+
+#php app/console server:run 127.0.0.1:8050
 
 

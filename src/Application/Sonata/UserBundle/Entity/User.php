@@ -53,33 +53,31 @@ class User extends BaseUser
     }
 
     public function addProject(Project $project) {
-        $this->projects->add($project);
         if (count($this->projects) > 0) {
-                $found = false;
-                foreach ($this->projects as $tmp) {
-                    if ($tmp->getLabel() === $project->getLabel()) {
-                        $found = true;
-                    }
-                }
-                if (!$found) {
-                    $this->projects[] = $project;
+            $found = false;
+            foreach ($this->projects as $tmp) {
+                if ($tmp->getTitle() === $project->getTitle()) {
+                    $found = true;
                 }
             }
+            if (!$found) {
+                $this->projects[] = $project;
+            }
+        }
 
         return $this;
     }
 
     public function removeProject(Project $project) {
-        $this->projects->removeElement($project);
         $tmps = array();
-            if (count($this->projects) > 0) {
-                foreach ($this->projects as $tmp) {
-                    if ($tmp->getLabel() !== $project->getLabel()) {
-                        $tmps[] = $tmp;
-                    }
+        if (count($this->projects) > 0) {
+            foreach ($this->projects as $tmp) {
+                if ($tmp->getTitle() !== $project->getTitle()) {
+                    $tmps[] = $tmp;
                 }
-                $this->projects = $tmps;
             }
+            $this->projects = $tmps;
+        }
 
         return $this;
     }
