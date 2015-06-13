@@ -1,0 +1,4 @@
+services:
+#    d_elt4_synthesis.example:
+#        class: dElt4\SynthesisBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

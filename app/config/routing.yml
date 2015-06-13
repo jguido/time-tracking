@@ -1,3 +1,8 @@
+d_elt4_synthesis:
+    resource: "@dElt4SynthesisBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 d_elt4_time:
     resource: "@dElt4TimeBundle/Controller/"
     type:     annotation
