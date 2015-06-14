@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{{ reporting['project']['title']}}</title>
+        <style>
+            .logo {width: 150px;height: 150px;background-image: url(data:image/png;base64,{{ logo }});background-size: 150px 150px;}
+        </style>
+    </head>
+    <body>
+        {% if reporting is defined and reporting|length > 0 %}
+            <h2>
+                {% if logo %}
+                    <div class="logo"></div>
+                {% endif %}
+                {% if configuration %}
+                    {{ configuration.denomination }}
+                {% endif %}
+            </h2>
+            <h3>{{ reporting['project']['title']}}</h3>
+            <h3>
+                {{ 'from'|trans({}, 'messages') }} {{ data['from']|date('Y-m-d') }} &nbsp;&nbsp;
+                {{ 'to'|trans({}, 'messages') }}  {{ data['to']|date('Y-m-d') }}
+            </h3>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th style="width:150px;border: 1px solid black;">{{ 'user'|trans({}, 'messages') }}</th>
+                    <th style="width:150px;border: 1px solid black;">{{ 'nb_days'|trans({}, 'messages') }}</th>
+                    <th style="width:150px;border: 1px solid black;">{{ 'cost_per_day'|trans({}, 'messages') }}</th>
+                    <th style="width:150px;border: 1px solid black;">{{ 'cost_total'|trans({}, 'messages') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in reporting.users %}
+                    <tr>
+                        <td style="width:150px;border: 1px solid black;">{{ user.name }}</td>
+                        <td style="width:150px;border: 1px solid black;text-align: center;">{{ user.nbDays/2 }}</td>
+                        <td style="width:150px;border: 1px solid black;text-align: right;">{{ user.price }} €</td>
+                        <td style="width:150px;border: 1px solid black;text-align: right;">{{ (user.nbDays/2)*user.price }} €</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </body>
+</html>
+

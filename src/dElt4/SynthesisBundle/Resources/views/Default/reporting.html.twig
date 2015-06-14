@@ -1,0 +1,23 @@
+{% if reporting is defined and reporting|length > 0 %}
+    <h2>{{ reporting['project']['title']}}</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>{{ 'user'|trans({}, 'messages') }}</th>
+                <th>{{ 'nb_days'|trans({}, 'messages') }}</th>
+                <th>{{ 'cost_per_day'|trans({}, 'messages') }}</th>
+                <th>{{ 'cost_total'|trans({}, 'messages') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in reporting.users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.nbDays/2 }}</td>
+                    <td>{{ user.price }} €</td>
+                    <td>{{ (user.nbDays/2)*user.price }} €</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

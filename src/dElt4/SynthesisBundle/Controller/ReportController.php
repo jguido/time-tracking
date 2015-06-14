@@ -41,11 +41,32 @@ class ReportController extends Controller
 
                 $reportManager = new ReportingManager();
                 $reporting = $reportManager->renderReport($results, $data);
+                if (!$request->isXmlHttpRequest()) {
+                    $configuration = $this->get('doctrine.orm.default_entity_manager')->getRepository('dElt4SynthesisBundle:Configuration')->find(1);
+                    $file = $this->get('kernel')->getRootDir().'/../web/uploads/media/'.$this->get('sonata.media.provider.image')->getReferenceImage($configuration->getLogo());
+                    $image = base64_encode(file_get_contents($file));
+                    $pdf = $this->renderView('dElt4SynthesisBundle:Default:reporting_print.html.twig', array(
+                            'reporting'     => $reporting,
+                            'data'          => $data,
+                            'configuration' => $configuration,
+                            'logo'          => $image
+                        )
+                    );
+                    return new Response(
+                        $this->get('knp_snappy.pdf')->getOutputFromHtml($pdf),
+                        200,
+                        array(
+                            'Content-Type'          => 'application/pdf',
+                            'Content-Disposition'   => 'attachment; filename="report.pdf"',
+                            'charset'               => 'UTF-8'
+                        )
+                    );
+                } else {
 
-                $response = new Response($this->get('serializer')->serialize($reporting, 'json'), 200);
-                $response->headers->add(array('Content-Type', 'application/json'));
-
-                return $response;
+                    return $this->render('dElt4SynthesisBundle:Default:reporting.html.twig', array(
+                        'reporting' => $reporting
+                    ));
+                }
             }
 
             return $this->render('dElt4SynthesisBundle:Default:index.html.twig', array(
@@ -59,6 +80,4 @@ class ReportController extends Controller
             return $this->redirect($this->generateUrl('sonata_admin_dashboard'));
         }
     }
-
-
 }

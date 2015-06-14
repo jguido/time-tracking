@@ -7,6 +7,7 @@ imports:
     - { resource: sonata/media-bundle.yml }
     - { resource: sonata/user-bundle.yml }
     - { resource: sonata/block-bundle.yml }
+    - { resource: knp/snappy-bundle.yml }
 
 framework:
     #esi:             ~
