@@ -2,6 +2,8 @@
 
 namespace dElt4\SynthesisBundle\Controller;
 
+use dElt4\TimeBundle\Entity\Event;
+use dElt4\TimeBundle\Entity\ProjectHasUser;
 use IntlDateFormatter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,12 +32,31 @@ class ReportController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $data = $form->getData();
-                $result = $this->get('doctrine.orm.default_entity_manager')->getRepository('dElt4TimeBundle:Event')->findByProjectFromTo(
+                $results = $this->get('doctrine.orm.default_entity_manager')->getRepository('dElt4TimeBundle:Event')->findByProjectFromTo(
                     $data['project']->getId(),
                     $data['from'],
                     $data['to']
                 );
-                $response = new Response($this->get('serializer')->serialize($result, 'json'), 201);
+                $reporting = array();
+                if (count($results) > 0) {
+                    $reporting['project'] = array(
+                        'title' => $data['project']->getTitle(),
+                        'price' => $data['project']->getPrice(),
+                    );
+                    foreach ($results as $event) {
+                        if ($event instanceof Event) {
+                            if (!array_key_exists($event->getUser()->__toString(), $reporting)) {
+                                $reporting['users'][$event->getUser()->__toString()] = array(
+                                    'price' => $this->getUserCost($event),
+                                    'id' => $event->getUser()->getId(),
+                                    'nbDays' => 0
+                                );
+                            }
+                            $reporting['users'][$event->getUser()->__toString()]['nbDays']++;
+                        }
+                    }
+                }
+                $response = new Response($this->get('serializer')->serialize($reporting, 'json'), 200);
                 $response->headers->add(array('Content-Type', 'application/json'));
 
                 return $response;
@@ -50,6 +71,17 @@ class ReportController extends Controller
             ));
         } else {
             return $this->redirect($this->generateUrl('sonata_admin_dashboard'));
+        }
+    }
+
+    private function getUserCost(Event $event) {
+
+        foreach ($event->getProject()->getProjectHasUsers() as $projectHasUser) {
+            if ($projectHasUser instanceof ProjectHasUser) {
+                if ($projectHasUser->getUser()->getId() === $event->getUser()->getId()) {
+                    return $projectHasUser->getCostPerDay();
+                }
+            }
         }
     }
 }
