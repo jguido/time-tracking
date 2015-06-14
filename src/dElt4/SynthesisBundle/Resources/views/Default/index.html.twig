@@ -82,15 +82,35 @@
                         hideSpinner();
                     },
                     success: function(res){
-                        $('div.alert-msg').removeClass('alert alert-danger').html('')
+                        $('div.alert-msg').removeClass('alert alert-danger').html('');
+                        $('div.reporting-response').html('');
                         var response = JSON.parse(res);
                         var project = response.project;
                         var users = response.users;
+                        var count = 0;
                         for(var i in users) {
                             var user = users[i];
-                            $('div.reporting-response').append('<div class="col-xs-5">'++'</div>')
+//                            console.log(user);
+                            $('div.reporting-response').append('<div class="col-xs-1">{{ 'user'|trans({}, 'messages') }}</div>');
+                            $('div.reporting-response').append('<div class="col-xs-2">'+user.name+'</div>');
+                            $('div.reporting-response').append('<div class="col-xs-1">{{ 'nb_days'|trans({}, 'messages') }}</div>');
+                            $('div.reporting-response').append('<div class="col-xs-2">'+parseInt(user.nbDays)/2+'</div>');
+                            $('div.reporting-response').append('<div class="col-xs-1">{{ 'cost_per_day'|trans({}, 'messages') }}</div>');
+                            $('div.reporting-response').append('<div class="col-xs-2">'+user.price+' €</div>');
+                            $('div.reporting-response').append('<div class="col-xs-1">{{ 'cost_total'|trans({}, 'messages') }}</div>');
+                            $('div.reporting-response').append('<div class="col-xs-2">'+ (parseInt(user.nbDays)/2) * user.price +' €</div>');
+                            count++;
                         }
-                        console.log(response);
+                        if (count === 0) {
+                            $('div.reporting-response').append('<div class="col-xs-1">{{ 'user'|trans({}, 'messages') }}</div>');
+                            $('div.reporting-response').append('<div class="col-xs-2">'+users.name+'</div>');
+                            $('div.reporting-response').append('<div class="col-xs-1">{{ 'nb_days'|trans({}, 'messages') }}</div>');
+                            $('div.reporting-response').append('<div class="col-xs-2">'+parseInt(users.nbDays)/2+'</div>');
+                            $('div.reporting-response').append('<div class="col-xs-1">{{ 'cost_per_day'|trans({}, 'messages') }}</div>');
+                            $('div.reporting-response').append('<div class="col-xs-2">'+users.price+' €</div>');
+                            $('div.reporting-response').append('<div class="col-xs-1">{{ 'cost_total'|trans({}, 'messages') }}</div>');
+                            $('div.reporting-response').append('<div class="col-xs-2">'+ (parseInt(users.nbDays)/2) * users.price +' €</div>');
+                        }
                         hideSpinner();
                     }
                 })

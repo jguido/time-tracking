@@ -4,6 +4,7 @@ namespace dElt4\SynthesisBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 USE Application\Sonata\MediaBundle\Entity\Media;
+use Sonata\MediaBundle\Model\MediaInterface;
 
 /**
  * Configuration
@@ -25,7 +26,7 @@ class Configuration
     /**
      * @var Media
      *
-     * @ORM\ManyToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media")
+     * @ORM\ManyToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media", cascade={"PERSIST"}, fetch="LAZY")
      */
     private $logo;
 
@@ -99,10 +100,10 @@ class Configuration
     /**
      * Set logo
      *
-     * @param Media $logo
+     * @param MediaInterface $logo
      * @return Configuration
      */
-    public function setLogo(Media $logo)
+    public function setLogo(MediaInterface $logo)
     {
         $this->logo = $logo;
 
@@ -112,7 +113,7 @@ class Configuration
     /**
      * Get logo
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function getLogo()
     {

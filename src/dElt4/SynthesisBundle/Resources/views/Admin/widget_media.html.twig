@@ -1,0 +1,11 @@
+{% extends '@SonataDoctrineORMAdmin/Form/form_admin_fields.html.twig' %}
+{% block sonata_type_model_list_widget %}
+    <div class="row">
+        <div class="col-xs-4">
+            {% media sonata_admin.value, 'small' with {'class': 'img-responsive'} %}
+        </div>
+        <div class="col-xs-8">
+            {{ parent() }}
+        </div>
+    </div>
+{% endblock %}
