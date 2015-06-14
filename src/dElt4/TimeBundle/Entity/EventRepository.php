@@ -39,6 +39,13 @@ class EventRepository extends EntityRepository
             ->getResult();
     }
 
+    /**
+     * @param integer   $userId
+     * @param string    $type
+     * @param \DateTime $date
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findOneByUserDateAndType($userId, $type, \DateTime $date)
     {
         $qb = $this->createQueryBuilder('e');
@@ -56,6 +63,28 @@ class EventRepository extends EntityRepository
             ->setParameter('type', $type, Type::STRING)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @param integer   $projectId
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByProjectFromTo($projectId, \DateTime $from, \DateTime $to)
+    {
+        $qb = $this->createQueryBuilder('e');
+
+        return $qb
+            ->where('e.day BETWEEN :from AND :to')
+            ->andWhere('e.project = :project')
+            ->setParameter('from'    , $from->format('Y-m-d'))
+            ->setParameter('to'      , $to->format('Y-m-d')  )
+            ->setParameter('project' , $projectId)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

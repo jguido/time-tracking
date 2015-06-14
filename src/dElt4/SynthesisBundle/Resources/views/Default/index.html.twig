@@ -1,1 +1,93 @@
-Hello {{ name }}!
+{% extends 'SonataAdminBundle:CRUD:edit.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock stylesheets %}
+{% block title %}{{ 'reporting'|trans({}, 'messages') }}{% endblock%}
+{% block actions %}{% endblock %}
+{% block sonata_breadcrumb %}
+    {% if _breadcrumb is not empty or action is defined %}
+        <ol class="nav navbar-top-links breadcrumb">
+            <li><a href="{{ path('sonata_admin_dashboard') }}"><i class="fa fa-home"></i></a></li>
+            <li>{{ 'reporting'|trans({}, 'messages') }}</li>
+        </ol>
+    {% endif %}
+{% endblock sonata_breadcrumb %}
+{% block tab_menu %}{% endblock %}
+{% block form %}
+    <section class="content">
+        <div class="sonata-ba-form">
+            <form role="form" class="form-build-report" method="post" action="{{ path('path_report_form') }}">
+                {{ form_row(form._token) }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12 ">
+                            <div class="box box-success">
+                                <div class="box-header">
+                                    <h4 class="box-title col-xs-12">
+                                        <div class="row col-xs-12">
+                                            <div class="col-xs-4 pull-left">{{ 'reporting'|trans({}, 'messages') }}</div>
+                                        </div>
+                                    </h4>
+                                </div>
+                                <div class="box-body">
+                                    <div id="reporting">
+                                        <h1>REPORT HERE</h1>
+                                        <div class="row">
+                                            <div class="col-xs-1">{{ form_label(form.from) }}</div>
+                                            <div class="col-xs-2">{{ form_widget(form.from) }}</div>
+                                            <div class="col-xs-1">{{ form_label(form.to) }}</div>
+                                            <div class="col-xs-2">{{ form_widget(form.to) }}</div>
+                                            <div class="col-xs-1">{{ form_label(form.project) }}</div>
+                                            <div class="col-xs-4">{{ form_widget(form.project) }}</div>
+                                            <div class="col-xs-1">
+                                                <button type="button" class="btn btn-default" name="btn-send-report-request"><i class="fa fa-line-chart">{{ 'build_report'|trans({}, 'messages') }}</i></button>
+                                            </div>
+                                        </div>
+                                        <div class="row alert-msg"></div>
+                                        <div class="row reporting-response"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="well well-small form-actions">
+                    <button class="btn btn-success" type="button" name="btn_print"><i class="fa fa-print"></i> {{ 'btn_print'|trans({}, 'messages') }}</button>
+                    <a href="{{ path('sonata_admin_dashboard') }}" class="btn btn-warning"><i class="fa fa-dashboard"></i> {{ 'dashboard'|trans({}, 'messages') }}</a>
+                </div>
+            </form>
+        </div>
+    </section>
+    {{ include('dElt4TimeBundle:Default:spinner_box.html.twig') }}
+{% endblock form %}
+{% block custom_js %}
+    <script>
+        jQuery(document).ready(function($){
+            $('.datepicker').datetimepicker({
+                locale: '{{ app.request.locale }}'
+            });
+            $('button[name="btn-send-report-request"]').unbind('click').click(function(e){
+                showSpinner();
+                e.preventDefault();
+                $form = $('form.form-build-report');
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: 'POST',
+                    data: $form.serializeArray(),
+                    datatype: 'json',
+                    error: function(xhr, res){
+                        $('div.alert-msg').addClass('alert alert-danger').html(xhr.statusText);
+                        hideSpinner();
+                    },
+                    success: function(res){
+                        $('div.alert-msg').removeClass('alert alert-danger').html('')
+                        console.log(res);
+                        hideSpinner();
+                    }
+                })
+            });
+        });
+    </script>
+{% endblock custom_js %}

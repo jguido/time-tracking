@@ -228,4 +228,9 @@ class Project
     {
         return $this->price;
     }
+
+    public function __toString()
+    {
+        return $this->getTitle();
+    }
 }

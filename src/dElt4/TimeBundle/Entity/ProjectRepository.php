@@ -20,11 +20,13 @@ class ProjectRepository extends EntityRepository
 
         if (count($projects) > 0) {
             foreach ($projects as $project) {
-                if ($project instanceof Project && count($project->getUsers()) > 0) {
+                if ($project instanceof Project && count($project->getProjectHasUsers()) > 0) {
                     $found = false;
-                    foreach ($project->getUsers() as $tmpUser) {
-                        if ($tmpUser->getUsername() === $user->getUsername()) {
-                            $found = true;
+                    foreach ($project->getProjectHasUsers() as $tmpUser) {
+                        if ($tmpUser instanceof ProjectHasUser) {
+                            if ($tmpUser->getUser()->getUsername() === $user->getUsername()) {
+                                $found = true;
+                            }
                         }
                     }
                     if ($found) {

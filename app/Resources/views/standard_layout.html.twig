@@ -64,6 +64,8 @@ file that was distributed with this source code.
                     <script src="{{ asset('bundles/sonataadmin/vendor/select2/select2_locale_' ~ locale|replace({'_':'-'}) ~ '.js') }}"></script>
                 {% endif %}
             {% endif %}
+            <script type="text/javascript" src="{{ asset('bundles/app/js/moment-with-locales.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/app/js/jquery-tools.js') }}"></script>
 
         {% endblock %}
 
@@ -244,7 +246,7 @@ file that was distributed with this source code.
                                                 <li><a href="{{ path('path_calendar') }}"><i class="fa fa-calendar"></i>&nbsp;{{ 'calendar'|trans({}, 'messages') }}</a></li>
                                             {% endif %}
                                             {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href=""><i class="fa fa-bar-chart-o"></i>&nbsp;{{ 'reporting'|trans({}, 'messages') }}</a></li>
+                                                <li><a href="{{ path('path_report_form') }}"><i class="fa fa-bar-chart-o"></i>&nbsp;{{ 'reporting'|trans({}, 'messages') }}</a></li>
                                             {% endif %}
                                             {% if is_granted('ROLE_ADMIN') %}
                                                 <li><a href="{{ path('admin_delt4_synthesis_configuration_edit', {'id': 1}) }}"><i class="fa fa-gear"></i>&nbsp;{{ 'configuration'|trans({}, 'messages') }}</a></li>
@@ -347,5 +349,10 @@ file that was distributed with this source code.
     <script src="{{ asset('bundles/delt4time/js/fullcalendar.min.js') }}"></script>
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            moment.locale('{{ app.request.locale }}');
+        });
+    </script>
     {% block custom_js %}{% endblock custom_js %}
 </html>
