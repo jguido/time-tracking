@@ -45,14 +45,15 @@ class ReportController extends Controller
                     );
                     foreach ($results as $event) {
                         if ($event instanceof Event) {
-                            if (!array_key_exists($event->getUser()->__toString(), $reporting)) {
-                                $reporting['users'][$event->getUser()->__toString()] = array(
+                            if (!array_key_exists($event->getUser()->getId(), $reporting)) {
+                                $reporting['users'][$event->getUser()->getId()] = array(
+                                    'name' => $event->getUser()->__toString(),
                                     'price' => $this->getUserCost($event),
                                     'id' => $event->getUser()->getId(),
                                     'nbDays' => 0
                                 );
                             }
-                            $reporting['users'][$event->getUser()->__toString()]['nbDays']++;
+                            $reporting['users'][$event->getUser()->getId()]['nbDays']++;
                         }
                     }
                 }
