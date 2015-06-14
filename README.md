@@ -42,3 +42,13 @@ And it runs and built in web server (you can specify the host and port at the en
 Your application will be accessible through 127.0.0.1:8050/app_dev.php
 
 that's all folks
+
+# Installation of Time Tracking application
+
+1. run command
+<pre>
+  php app/console time:init
+</pre>
+
+The command will create mandatored data and give you the admin password access
+
